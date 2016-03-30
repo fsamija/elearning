@@ -1,0 +1,25 @@
+<div id="uploaded">
+    {% if uploadError %}
+    <span class="error">{{ uploadError }}</span>
+    {% else %}
+    {{ uploadedFile }}
+    {% endif %}
+</div>
+
+
+
+  <p>
+{{objects.name}}
+ </p>
+   <p>
+{{objects.display_file|linebreaks}}
+ </p>
+
+<p><a href="/media/{{objects.upload}}">{{objects.name}}</a></p>
+
+ <p>
+   file name: {{obj.name}} <br>
+   file content: {{obj.display_file}}
+ </p>
+
+

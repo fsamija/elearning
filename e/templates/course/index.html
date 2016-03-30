@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html>
+	<head>
+
+	</head>
+
+	<body>
+		<div>
+			<a href="/course">Courses</a>
+			{% if user.is_anonymous %}
+				<a href="{% url 'django.contrib.auth.views.login' %}">login</a>
+				OR
+				<a href="/register">register</a>
+			{% else %}
+				{{ user }}
+				<a href="{% url 'django.contrib.auth.views.logout' %}">logout</a>
+			{% endif %}
+    	</div>
+	</body>
+</html>

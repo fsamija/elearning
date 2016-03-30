@@ -1,0 +1,14 @@
+{% block content %}
+
+<h1>Delete Course</h1>
+
+<p>Are you sure you want to delete the course {{ course }}?</p>
+
+<form action="{% url "courses-delete" pk=course.id %}" method="POST">
+  {% csrf_token %}
+
+  <input type="submit" value="Yes, delete." />
+  <a href="{% url "courses-list" %}">No, cancel.</a>
+</form>
+
+{% endblock %}

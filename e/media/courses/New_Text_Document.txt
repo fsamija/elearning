@@ -1,0 +1,23 @@
+from django.contrib.auth.decorators import login_required, user_passes_test
+def is_member(user):
+    return user.groups.filter(name='Member').exists()
+
+def is_in_multiple_groups(user):
+    return user.groups.filter(name__in=['group1', 'group2']).exists()
+
+
+@login_required
+@user_passes_test(is_member) # or @user_passes_test(is_in_multiple_groups)
+def myview(request):
+    # Do your processing
+
+#Permissions 
+content_type = ContentType.objects.get(app_label='myapp', model='BlogPost')
+permission = Permission.objects.create(codename='can_publish',
+                                       name='Can Publish Posts',
+                                       content_type=content_type)
+#
+user = User.objects.get(username='duke_nukem')
+group = Group.objects.get(name='wizard')
+group.permissions.add(permission)
+user.groups.add(group)

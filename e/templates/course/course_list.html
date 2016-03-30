@@ -1,0 +1,17 @@
+{% block content %}
+<h1>Courses</h1>
+
+<ul>
+  {% for course in object_list %}
+    <li class="course">{{ course }}
+    	(<a href="{% url "courses-edit" pk=course.id %}">edit</a>)
+    	(<a href="{% url "courses-delete" pk=course.id %}">delete</a>)
+    	{% if perms.course.can_view %}
+		(<a href="/media/{{course.upload}}">view</a>)
+		{% endif %}
+    	
+    </li>
+  {% endfor %}
+</ul>
+<a href="{% url "courses-new" %}">add course</a>
+{% endblock %}
