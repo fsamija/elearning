@@ -99,7 +99,7 @@ class CreateCourseView(CreateView, GroupRequiredMixin):
 
 	@method_decorator(permission_required('course.can_create',raise_exception=True))
 	def dispatch(self, request):
-            return super(CreateCourseView, self).dispatch(request)
+		return super(CreateCourseView, self).dispatch(request)
 	def get_success_url(self):
 		return reverse('courses-list')
 
@@ -118,7 +118,7 @@ class UpdateCourseView(UpdateView):
 
 	@method_decorator(permission_required('course.can_modify',raise_exception=True))
 	def dispatch(self, request, pk):
-            return super(UpdateCourseView, self).dispatch(request)
+		return super(UpdateCourseView, self).dispatch(request)
 
 	def get_success_url(self):
 		return reverse('courses-list')
@@ -138,7 +138,7 @@ class DeleteCourseView(DeleteView):
 
 	@method_decorator(permission_required('course.can_delete',raise_exception=True))
 	def dispatch(self, request, pk):
-            return super(DeleteCourseView, self).dispatch(request)
+		return super(DeleteCourseView, self).dispatch(request)
 
 	def get_success_url(self):
 		return reverse('courses-list')
@@ -148,7 +148,6 @@ class DeleteCourseView(DeleteView):
 def register(request):
 
     # A boolean value for telling the template whether the registration was successful.
-    # Set to False initially. Code changes value to True when registration succeeds.
     registered = False
 
     # If it's a HTTP POST, we're interested in processing form data.
