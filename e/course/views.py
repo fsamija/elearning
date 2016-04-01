@@ -17,6 +17,7 @@ from django.conf import settings
 from django.core.files import File
 from django.shortcuts import render_to_response
 from django.template import RequestContext
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 class IndexView(generic.ListView):
 	template_name = 'course/index.html'
@@ -36,14 +37,25 @@ def is_professor(user):
 #                 return HttpResponseForbidden # 403 Forbidden is better than 404
 #         return wrapper
 #     return decorator
+
 # @login_required
 # @user_passes_test(is_professor)
+# PAGINACIJA, NE RADI if perms.course.can_view
 # def ListCourseView(request):
-# 	model = Course
-# 	template_name = loader.get_template('course/course_list.html')
-# 	fields = '__all__'
-# 	return HttpResponse(template_name.render)
+#     queryset_list = Course.objects.all()
+#     paginator = Paginator(queryset_list, 25) # Show 25 contacts per page
 
+#     page = request.GET.get('page')
+#     try:
+#         queryset = paginator.page(page)
+#     except PageNotAnInteger:
+#         # If page is not an integer, deliver first page.
+#         queryset = paginator.page(1)
+#     except EmptyPage:
+#         # If page is out of range (e.g. 9999), deliver last page of results.
+#         queryset = paginator.page(paginator.num_pages)
+
+#     return render_to_response('course/course_list.html', {"object_list": queryset})
 # class DetailCourseView(DetailView):
 # 	model = Course
 # 	#template_name = 'course/course_view.html'
