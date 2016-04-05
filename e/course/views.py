@@ -19,6 +19,7 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
+
 class IndexView(generic.ListView):
 	template_name = 'course/index.html'
 	def get_queryset(self):
@@ -40,39 +41,64 @@ def is_professor(user):
 
 # @login_required
 # @user_passes_test(is_professor)
-# PAGINACIJA, NE RADI if perms.course.can_view
+# PAGINACIJA, NE RADI view
 # def ListCourseView(request):
-#     queryset_list = Course.objects.all()
-#     paginator = Paginator(queryset_list, 25) # Show 25 contacts per page
+# 	queryset_list = Course.objects.all()
+# 	paginator = Paginator(queryset_list, 25) # Show 25 
+# 	query = request.GET.get("query")
+# 	if query:
+# 		queryset_list = queryset_list.filter(name__icontains=query)
+# 	page = request.GET.get('page')
+# 	try:
+# 		queryset = paginator.page(page)
+# 	except PageNotAnInteger:
+# 		queryset = paginator.page(1)
+# 	except EmptyPage:		
+# 		queryset = paginator.page(paginator.num_pages)
 
-#     page = request.GET.get('page')
-#     try:
-#         queryset = paginator.page(page)
-#     except PageNotAnInteger:
-#         # If page is not an integer, deliver first page.
-#         queryset = paginator.page(1)
-#     except EmptyPage:
-#         # If page is out of range (e.g. 9999), deliver last page of results.
-#         queryset = paginator.page(paginator.num_pages)
+# 	return render_to_response('course/course_list.html', {"object_list": queryset})
 
-#     return render_to_response('course/course_list.html', {"object_list": queryset})
-# class DetailCourseView(DetailView):
-# 	model = Course
-# 	#template_name = 'course/course_view.html'
-# def show_files(request, pk):
-# 	objects = Course.objects.get(id=pk)
-# 	return render_to_response('course/course_view.html', {'objects': objects},
-# 	                              context_instance=RequestContext(request))
+class DetailCourseView(DetailView):
+	model = Course
+	#template_name = 'course/course_view.html'
+
+def show_files(request, pk):
+	objects = Course.objects.get(id=pk)
+	return render_to_response('course/course_view.html', {'objects': objects},
+	                              context_instance=RequestContext(request))
 
 
 class ListCourseView(ListView):
 	# group_required = u"Professor"
-	# def get_queryset(self):
-	# 	if not self.request.user.is_superuser:
-	# 		return HttpResponseForbidden()
 	model = Course
 	template_name = 'course/course_list.html'
 	fields = '__all__'
+	def get_queryset(self):
+		# if not self.request.user.is_superuser:
+		# 	return HttpResponseForbidden()
+		queryset_list = Course.objects.all()		
+		query = self.request.GET.get("query")
+		if query:
+			queryset_list = queryset_list.filter(name__icontains=query)
+		
+		paginator = Paginator(queryset_list, 10) # Show 25 
+		page = self.request.GET.get('page')
+		try:
+			queryset = paginator.page(page)
+		except PageNotAnInteger:
+			queryset = paginator.page(1)
+		except EmptyPage:		
+			queryset = paginator.page(paginator.num_pages)
+
+		return queryset
+
+	def get_context_data(self, **kwargs):
+		context = super(ListCourseView, self).get_context_data(**kwargs)
+		return context
+
+	def get_success_url(self):
+		return reverse('courses-list')
+
 	#return render(request, template_name)
 
 # @user_passes_test(is_professor)	
@@ -159,56 +185,37 @@ class DeleteCourseView(DeleteView):
 
 def register(request):
 
-    # A boolean value for telling the template whether the registration was successful.
-    registered = False
 
-    # If it's a HTTP POST, we're interested in processing form data.
+    registered = False
+    
     if request.method == 'POST':
-        # Attempt to grab information from the raw form information.
-        # Note that we make use of both UserForm and UserProfileForm.
         user_form = UserForm(data=request.POST)
         profile_form = UserProfileForm(data=request.POST)
 
-        # If the two forms are valid...
+       
         if user_form.is_valid() and profile_form.is_valid():
-            # Save the user's form data to the database.
+           
             user = user_form.save()
-
-            # Now we hash the password with the set_password method.
-            # Once hashed, we can update the user object.
             user.set_password(user.password)
             user.save()
-
-            # Now sort out the UserProfile instance.
-            # Since we need to set the user attribute ourselves, we set commit=False.
-            # This delays saving the model until we're ready to avoid integrity problems.
+           
             profile = profile_form.save(commit=False)
             profile.user = user
 
-            # Did the user provide a profile picture?
-            # If so, we need to get it from the input form and put it in the UserProfile model.
             if 'picture' in request.FILES:
                 profile.picture = request.FILES['picture']
-
-            # Now we save the UserProfile model instance.
-            profile.save()
-
-            # Update our variable to tell the template registration was successful.
+        
+            profile.save()         
             registered = True
-
-        # Invalid form or forms - mistakes or something else?
-        # Print problems to the terminal.
-        # They'll also be shown to the user.
+       
         else:
             print user_form.errors, profile_form.errors
-
-    # Not a HTTP POST, so we render our form using two ModelForm instances.
-    # These forms will be blank, ready for user input.
+  
     else:
         user_form = UserForm()
         profile_form = UserProfileForm()
 
-    # Render the template depending on the context.
+    
     return render(request,
             'registration/register.html',
             {'user_form': user_form, 'profile_form': profile_form, 'registered': registered} )

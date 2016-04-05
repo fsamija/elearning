@@ -1,9 +1,14 @@
 {% extends "base.html" %}
-
+<!-- {% load group_tag %} -->
 {% block content %}
 <h1>Courses</h1>
+<form method='GET' action=''>
+	<input type='text' name='query' placeholder='Search course' value='{{ request.GET.query }}'/>
+	<input type='submit' value='Search'/>
+</form>
 
 <ul>
+
   {% for course in object_list %}
     <li class="course">{{ course }}
     	(<a href="{% url "courses-edit" pk=course.id %}">edit</a>)
@@ -11,25 +16,30 @@
     	{% if perms.course.can_view %}
 		(<a href="/media/{{course.upload}}">view</a>)
 		{% endif %}
-    	
+
+<!-- 		{% if course.user|has_group:"Professors" %}
+		(<a href="/media/{{course.upload}}">view</a>)
+		{% endif %} -->
     </li>
   {% endfor %}
 </ul>
+<a href="{% url "courses-new" %}">Add course</a>
+<br>
 <!-- PAGINACIJA -->
-<!-- <div class="pagination">
+<div class="pagination">
     <span class="step-links">
-        {% if contacts.has_previous %}
-            <a href="?page={{ contacts.previous_page_number }}">previous</a>
+        {% if object_list.has_previous %}
+            <a href="?page={{ object_list.previous_page_number }}">previous</a>
         {% endif %}
 
         <span class="current">
-            Page {{ contacts.number }} of {{ contacts.paginator.num_pages }}.
+            Page {{ object_list.number }} of {{ object_list.paginator.num_pages }}.
         </span>
 
-        {% if contacts.has_next %}
-            <a href="?page={{ contacts.next_page_number }}">next</a>
+        {% if object_list.has_next %}
+            <a href="?page={{ object_list.next_page_number }}">next</a>
         {% endif %}
     </span>
-</div> -->
-<a href="{% url "courses-new" %}">add course</a>
+</div>
+
 {% endblock %}
