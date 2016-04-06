@@ -26,9 +26,9 @@ class Course(models.Model):
 			('can_create', 'Can Create'),
 			('can_delete', 'Can Delete'),
 			)
-	def display_file(self):
-		self.upload.open() # reset the pointer of file, needs if you need to read file more than once, in a request.
-		return self.upload.read().replace('\n', '<br>')
+	# def display_file(self):
+	# 	self.upload.open() # reset the pointer of file, needs if you need to read file more than once, in a request.
+	# 	return self.upload.read().replace('\n', '<br>')
 	
 
 class UserProfile(models.Model):

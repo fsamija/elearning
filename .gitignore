@@ -1,0 +1,7 @@
+e/media
+#e/static
+media_cdn/
+#static_cdn/
+*.pyc
+bin
+lib

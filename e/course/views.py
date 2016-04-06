@@ -1,23 +1,22 @@
-from django.shortcuts import render, redirect 
+from braces.views import GroupRequiredMixin
+from course.models import Course
+from django import forms
+from django.conf import settings
+from django.contrib.auth import models
+from django.contrib.auth.decorators import login_required, user_passes_test, permission_required
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.files import File
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseForbidden
+from django.shortcuts import render, redirect, render_to_response
+from django.template import RequestContext
+from django.utils.decorators import method_decorator
 from django.views import generic
 from django.views.generic import DetailView, ListView, CreateView, UpdateView, DeleteView, TemplateView
-from course.models import Course
-from django.core.urlresolvers import reverse
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django import forms
-from django.contrib.auth.forms import UserCreationForm
 from e.forms import MyRegistrationForm, UserProfileForm, UserForm
-from django.contrib.auth.decorators import login_required, user_passes_test, permission_required
 from models import UserProfile
-from braces.views import GroupRequiredMixin
-from django.utils.decorators import method_decorator
-from django.contrib.auth import models
-from django.conf import settings
-from django.core.files import File
-from django.shortcuts import render_to_response
-from django.template import RequestContext
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 
 class IndexView(generic.ListView):
@@ -25,8 +24,8 @@ class IndexView(generic.ListView):
 	def get_queryset(self):
 		return 
 
-def is_professor(user):
-    return user.groups.filter(name='Professors').exists()
+# def is_professor(user):
+#     return user.groups.filter(name='Professors').exists()
 # def group_required(arg_name):
 #     def decorator(view):
 #         def wrapper(request, *args, **kwargs):
@@ -58,14 +57,14 @@ def is_professor(user):
 
 # 	return render_to_response('course/course_list.html', {"object_list": queryset})
 
-class DetailCourseView(DetailView):
-	model = Course
+# class DetailCourseView(DetailView):
+# 	model = Course
 	#template_name = 'course/course_view.html'
 
-def show_files(request, pk):
-	objects = Course.objects.get(id=pk)
-	return render_to_response('course/course_view.html', {'objects': objects},
-	                              context_instance=RequestContext(request))
+# def show_files(request, pk):
+# 	objects = Course.objects.get(id=pk)
+# 	return render_to_response('course/course_view.html', {'objects': objects},
+# 	                              context_instance=RequestContext(request))
 
 
 class ListCourseView(ListView):
