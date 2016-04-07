@@ -42,28 +42,30 @@ class UserProfile(models.Model):
 	def __unicode__(self):
 		return self.user.username
 
-professor = Group.objects.get(name='Professors')
+# students = Group(name='Students')
+# students.save()
+# professor = Group.objects.get(name='Professors')
 #professor.save()
 #really_special_users = Group(name='Super Special Users')
 #really_special_users.save()
 
-somemodel_ct = ContentType.objects.get(app_label='course', model='course')
+# somemodel_ct = ContentType.objects.get(app_label='course', model='course')
 
-can_view = Permission(name='Can View', codename='can_view_something',
-                       content_type=somemodel_ct)
+# can_view = Permission(name='Can View', codename='can_view_something',
+#                        content_type=somemodel_ct)
 #can_view.save()
 
-can_modify = Permission(name='Can Modify', codename='can_modify_something',
-                       content_type=somemodel_ct)
+# can_modify = Permission(name='Can Modify', codename='can_modify_something',
+#                        content_type=somemodel_ct)
 
-can_create = Permission(name='Can Create', codename='can_create_something',
-                       content_type=somemodel_ct)
+# can_create = Permission(name='Can Create', codename='can_create_something',
+#                        content_type=somemodel_ct)
 
-can_delete = Permission(name='Can Delete', codename='can_delete_something',
-                       content_type=somemodel_ct)
+# can_delete = Permission(name='Can Delete', codename='can_delete_something',
+#                        content_type=somemodel_ct)
 
-can_shit = Permission(name='Can Shit', codename='can_shit_something',
-                       content_type=somemodel_ct)
+# can_shit = Permission(name='Can Shit', codename='can_shit_something',
+#                        content_type=somemodel_ct)
 # can_shit.save()
 # can_delete.save()
 

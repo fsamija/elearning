@@ -18,20 +18,23 @@ from django.conf.urls import url, include, patterns
 from django.conf.urls.static import static
 from django.contrib import admin
 import course.views
-
+from django.contrib.auth import views as auth_views
+from django.views.static import serve
 
 urlpatterns = [
 # url(r'^$', views.IndexView.as_view(), name='index'),
 	url(r'^$', course.views.IndexView.as_view(), name='index'),
 	url(r'^admin/', admin.site.urls),
 	url(r'^course/', include('course.urls')),
-	url(r'^accounts/login/$', 'django.contrib.auth.views.login'),
-	url(r'^logout/$', 'django.contrib.auth.views.logout'),
+	url(r'^accounts/login/$', auth_views.login),
+	url(r'^logout/$', auth_views.logout),
 	url(r'^register/$', course.views.register , name="register"),
 	#url(r'^groups-manager/', include('groups_manager.urls', namespace='groups_manager')),
+    url(r'^media/(?P<path>.*)$',serve,
+        {'document_root': settings.MEDIA_ROOT}),
 ]
-if settings.DEBUG:
-	urlpatterns += patterns('django.views.static',
-        (r'^media/(?P<path>.*)',
-        'serve',
-        {'document_root': settings.MEDIA_ROOT}),)
+# if settings.DEBUG:
+# 	urlpatterns += patterns('django.views.static',
+#         (r'^media/(?P<path>.*)$',
+#         serve,
+#         {'document_root': settings.MEDIA_ROOT}),)
