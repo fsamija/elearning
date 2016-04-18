@@ -1,7 +1,8 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
-from course.models import UserProfile
+from django.forms.models import inlineformset_factory
+from course.models import UserProfile, Course, CourseChapter
 
 class MyRegistrationForm(UserCreationForm):
     email = forms.EmailField(required = True)
@@ -34,3 +35,16 @@ class UserProfileForm(forms.ModelForm):
     class Meta:
         model = UserProfile
         fields = ('picture',)
+
+class CourseForm(forms.ModelForm):
+    class Meta:
+        model = Course
+        fields = '__all__' 
+
+
+class CourseChapterForm(forms.ModelForm):
+    class Meta:
+        model = CourseChapter
+        fields = '__all__' 
+
+CourseChapterFormSet = inlineformset_factory(Course, CourseChapter,  fields = '__all__' )

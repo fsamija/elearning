@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block content %}
+
+<script>
+$(document).ready(function() {
+  $('#add-chapter').click(function(ev){
+
+    ev.preventDefault();
+    var count = $('.chapters').children().length;
+    
+    var tmplMarkup = $('#chapter-template').html();
+    var compiledTmpl = tmplMarkup.replace(/__prefix__/g, count);
+    $('div.chapters').append(compiledTmpl);
+    // update form count
+    $('#id_chapters-TOTAL_FORMS').attr('value', count+1);
+
+     $('html, body').animate({
+                  scrollTop: $("#add-chapter").position().top-200
+              }, 800);
+  });
+});
+</script>
+
+<script type="text/html" id="chapter-template">
+<div id="chapter-__prefix__">
+    {{ form }}
+
+</div>
+</script>
+
+
+<form action="{{ action }}" class="form-horizontal form-inline" method="post" enctype="multipart/form-data">
+
+  {% csrf_token %}
+
+{% if course.id %}
+  <legend>Edit Chapters</legend>
+{% else %}
+  <legend>Add Chapters</legend>
+{% endif %}
+
+  {{ form }}
+{{chapter}}
+  <div class="chapters">
+	  {% for chapter_form in form %}
+	    <div id="chapter-{{ forloop.counter0 }}">
+	      <!-- {{ chapter_form.id }} -->
+	      <!-- {{ form.as_p }} -->
+
+	    </div>
+	  {% endfor %}
+  </div>
+
+ <div class="form-actions">
+   <a href="#" id="add-chapter" class="btn btn-info add-chapter" >Add Chapter</a>
+   <button type="submit" class="btn btn-primary">Submit</button>
+ </div>
+</form>
+
+ {% endblock content %}

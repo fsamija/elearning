@@ -10,11 +10,15 @@ def upload_location(obj, filename):
 
 class Course(models.Model):
 	user = models.ForeignKey(settings.AUTH_USER_MODEL, default=1)
-	name = models.CharField(
-		max_length=255,
-		)
+	name = models.CharField(max_length=255,)	
 	upload = models.FileField(upload_to=upload_location, blank=True)
-
+	# list_display = ('display_courses')
+	# fieldsets = [(None, 
+	# 	{'fields': ['chapter_title']}),
+	# ('Date information', {'fields': ['pub_date']}),
+	# ('Content', {'fields': ['content']}),
+	# ]
+	# list_display = ('chapter_title', 'pub_date', 'content')
 	def __str__(self):
 		return ' '.join([
 			self.name
@@ -25,11 +29,22 @@ class Course(models.Model):
 			('can_modify', 'Can Modify'),
 			('can_create', 'Can Create'),
 			('can_delete', 'Can Delete'),
+			('can_list', 'Can See List'),
 			)
+
 	# def display_file(self):
 	# 	self.upload.open() # reset the pointer of file, needs if you need to read file more than once, in a request.
 	# 	return self.upload.read().replace('\n', '<br>')
+class CourseChapter(models.Model):
+	title = models.CharField(max_length=255,)
+	content = models.CharField(max_length=255,)
+	course = models.ForeignKey(Course)#, on_delete=models.CASCADE, related_name="course_chapters"#)
 	
+	# def display_courses(self):
+	# 	return ', '.join([ course.name for course in self.courses.all() ])
+	def __str__(self):       
+		return self.title
+
 
 class UserProfile(models.Model):
 	user = models.OneToOneField(User)
@@ -79,3 +94,19 @@ class UserProfile(models.Model):
 
 # jill=User.objects.get(email='jill@test.com')
 # jill.groups.add(really_special_users)
+# class Entity(models.Model):
+#     class Meta:
+#         # Remove default permissions, remove this line to keep them
+#         default_permissions = dict()
+
+#         # Custom permissions 
+#         permissions = (
+#             ("add_democourse", "Add new demo course"),
+#             ("edit_democourse", "Edit demo course"),
+#             ("delete_democourse", "Delete demo course"),
+#             ("list_democourse", "See list of demo courses"),
+#             ("view_democourse", "View demo course profile"),
+#         )
+
+#     user = models.OneToOneField(User)
+#     parent = models.ManyToManyField(User, related_name='parents', blank=True)

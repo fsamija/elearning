@@ -1,5 +1,5 @@
 from braces.views import GroupRequiredMixin
-from course.models import Course
+from course.models import Course, UserProfile, CourseChapter
 from django import forms
 from django.conf import settings
 from django.contrib.auth import models
@@ -10,13 +10,13 @@ from django.core.files import File
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseForbidden
-from django.shortcuts import render, redirect, render_to_response
+from django.shortcuts import render, redirect, render_to_response,  get_object_or_404
 from django.template import RequestContext
 from django.utils.decorators import method_decorator
 from django.views import generic
 from django.views.generic import DetailView, ListView, CreateView, UpdateView, DeleteView, TemplateView
-from e.forms import MyRegistrationForm, UserProfileForm, UserForm
-from models import UserProfile
+from e.forms import MyRegistrationForm, UserProfileForm, UserForm, CourseForm, CourseChapterForm, CourseChapterFormSet
+
 
 
 class IndexView(generic.ListView):
@@ -80,7 +80,7 @@ class ListCourseView(ListView):
 		if query:
 			queryset_list = queryset_list.filter(name__icontains=query)
 		
-		paginator = Paginator(queryset_list, 10) # Show 25 
+		paginator = Paginator(queryset_list, 10) # Show 10
 		page = self.request.GET.get('page')
 		try:
 			queryset = paginator.page(page)
@@ -121,31 +121,70 @@ class ListCourseView(ListView):
 # 		return context
 
 # 	return render(request, template_name)
+class CreateChapterView(CreateView, GroupRequiredMixin):
+	model = CourseChapter
+	template_name = 'course/add_chapter.html'
+	fields = '__all__'
+	def dispatch(self, request, *args, **kwargs):
+		self.pk = kwargs.get('pk')
+		return super(CreateChapterView, self).dispatch(request, *args, **kwargs)
+	def get_success_url(self):
+		return reverse('courses-list')
+
+	def get_context_data(self, **kwargs):
+
+		context = super(CreateChapterView, self).get_context_data(**kwargs)
+		context['chapter'] = CourseChapterForm
+
+		return context
+
+	def form_valid(self, form):
+		self.object = form.save()
+		return HttpResponseRedirect(self.get_success_url())
 
 class CreateCourseView(CreateView, GroupRequiredMixin):
 	# def get_queryset(self, request):
 	# 	if not request.user.is_superuser:
 	# 		return False
 	
-
-	model = Course
+	# form_class = CourseForm #umisto fields ako nije form_classes
+	model = Course #netriba ako se koristi form_class ??
 	template_name = 'course/edit_course.html'
 	fields = '__all__'
-
+	# chapter_form = CourseChapterForm()
 	#required_permissions = (u'course.can_create')
 
 	@method_decorator(permission_required('course.can_create',raise_exception=True))
-	def dispatch(self, request):
-		return super(CreateCourseView, self).dispatch(request)
+	def dispatch(self, request, *args, **kwargs):
+		self.pk = kwargs.get('pk')
+		return super(CreateCourseView, self).dispatch(request, *args, **kwargs)
 	def get_success_url(self):
-		return reverse('courses-list')
+		# course = get_object_or_404(Course, pk=course.id)
+		return reverse('courses-chapters', kwargs={'pk': self.pk})
 
 	def get_context_data(self, **kwargs):
 
 		context = super(CreateCourseView, self).get_context_data(**kwargs)
 		context['action'] = reverse('courses-new')
-
+		context['chapter'] = CourseChapter.objects.all()
 		return context
+
+	def form_valid(self, form):
+		# context = self.get_context_data()
+		# formset = context['action']
+		# if formset.is_valid():
+		self.object = form.save()
+		# 	formset.instance = self.object
+		# 	formset.save()
+		return HttpResponseRedirect(reverse('courses-chapters', kwargs={'pk': self.object.pk}))  # redirect(self.object.get_absolute_url()) assuming your model has ``get_absolute_url`` defined.
+		# else:
+		# 	return self.render_to_response(self.get_context_data(form=form))
+	# def get_context_data(self, **kwargs):
+
+	# 	context = super(CreateCourseView, self).get_context_data(**kwargs)
+	# 	context['action'] = reverse('courses-new')
+
+	# 	return context
 
 class UpdateCourseView(UpdateView):
 
@@ -162,11 +201,51 @@ class UpdateCourseView(UpdateView):
 
 	def get_context_data(self, **kwargs):
 
+		# context = super(UpdateCourseView, self).get_context_data(**kwargs)
+		# if self.request.POST:
+		# 	context['formset'] = CourseChapterFormSet(self.request.POST)
+		# 	context['action'] = reverse('courses-edit',
+  #                                   kwargs={'pk': self.get_object().id})
+		# else:
+		# 	context['formset'] = CourseChapterFormSet()
+		# return context
+		# def get_context_data(self, **kwargs):
+
 		context = super(UpdateCourseView, self).get_context_data(**kwargs)
+		# context['chapter'] = CourseChapterForm(self.request.POST)
 		context['action'] = reverse('courses-edit',
+                                    kwargs={'pk': self.get_object().id})
+		context['chapter'] = CourseChapter.objects.get(course_id=self.get_object().id)
+
+		return context
+	def form_valid(self, form):
+		self.object = form.save()
+		return HttpResponseRedirect(self.get_succes_url())
+
+class UpdateChapterView(UpdateView):
+
+	model = CourseChapter
+	template_name = 'course/add_chapter.html'
+	fields = '__all__'
+
+	@method_decorator(permission_required('course.can_modify',raise_exception=True))
+	def dispatch(self, request, pk):
+		return super(UpdateChapterView, self).dispatch(request)
+
+	def get_success_url(self):
+		return reverse('courses-list')
+
+	def get_context_data(self, **kwargs):
+
+		context = super(UpdateChapterView, self).get_context_data(**kwargs)
+		# context['chapter'] = CourseChapterForm(self.request.POST)
+		context['action'] = reverse('chapters-edit',
                                     kwargs={'pk': self.get_object().id})
 
 		return context
+	def form_valid(self, form):
+		self.object = form.save()
+		return HttpResponseRedirect(self.get_succes_url())
 
 class DeleteCourseView(DeleteView):
 

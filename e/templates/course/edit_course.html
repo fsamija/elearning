@@ -1,19 +1,88 @@
 {% extends "base.html" %}
 {% block content %}
 
+<script>
+$(document).ready(function() {
+	$('#add-chapter').click(function(ev){
+
+	  ev.preventDefault();
+	  var count = $('.chapters').children().length;
+	  
+	  var tmplMarkup = $('#chapter-template').html();
+	  var compiledTmpl = tmplMarkup.replace(/__prefix__/g, count);
+	  $('div.chapters').append(compiledTmpl);
+	  // update form count
+	  $('#id_chapters-TOTAL_FORMS').attr('value', count+1);
+
+	   $('html, body').animate({
+	                scrollTop: $("#add-chapter").position().top-200
+	            }, 800);
+	});
+});
+</script>
+<script type="text/html" id="chapter-template">
+<div id="chapter-__prefix__">
+    {{ formset.empty_form }}
+
+</div>
+</script>
+
 {% if course.id %}
 <h1>Edit Course</h1>
+
+  <legend>Chapters</legend>
+
+  <div class="chapters">
+	  {% for chapter_form in formset %}
+	    <div id="chapter-{{ forloop.counter0 }}">
+	      {{ chapter_form.id }}
+	      {{ chapter_form.as_p }}
+
+	    </div>
+	  {% endfor %}
+  </div> 
 {% else %}
 <h1>Add Course</h1>
 {% endif %}
 
-<form action="{{ action }}" method="POST" enctype="multipart/form-data">
+<!-- <form action="{{ action }}" method="POST" enctype="multipart/form-data">
   {% csrf_token %}
   <ul>
-    {{ form.as_ul }}
+    {{ form.as_p }}
   </ul>
   <input id="save_course" type="submit" value="Save" />
-</form>
+</form> -->
 
 <a href="{% url "courses-list" %}">back to list</a>
+
+<form action="{{ action }}" class="form-horizontal form-inline" method="post" enctype="multipart/form-data">
+
+  {% csrf_token %}
+
+  {{ form }}
+  {{ formset.management_form }}
+<!-- 
+  <legend>Chapters</legend> -->
+
+<!--   <div class="chapters">
+	  {% for chapter_form in formset %}
+	    <div id="chapter-{{ forloop.counter0 }}">
+	      <!-- {{ chapter_form.id }}
+	      {{ chapter_form.as_p }}
+
+	    </div>
+	  {% endfor %}
+  </div> --> 
+  {% if course.id %}
+<a href="{% url "chapters-edit" pk=chapter.pk %}">edit chapters</a>
+{% endif %}
+ <div class="form-actions">
+<!--    <a href="#" id="add-chapter" class="btn btn-info add-chapter" >Add Chapter</a> -->
+   <button type="submit" class="btn btn-primary">Submit</button>
+ </div>
+</form>
+
+
+
+  
 {% endblock content %}

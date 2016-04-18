@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Add a Chapter</title>
+</head>>
+<body>
+    <p>Add Chapters</p>
+    <form id="chapter" name="" action="" method="post"> {% csrf_token %}
+        <fieldset>
+            <label for="id_chapter">Chapter: </label>{{form.chapter}}
+        
+            <input id="submit" type="submit" value="Submit" />
+        </fieldset>
+    </form>
+
+</body>
+</html>
