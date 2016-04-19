@@ -140,7 +140,9 @@ class CreateChapterView(CreateView, GroupRequiredMixin):
 
 	def form_valid(self, form):
 		self.object = form.save()
-		return HttpResponseRedirect(self.get_success_url())
+		chapters = CourseChapter.objects.all()
+		return  render_to_response('course/add_chapter.html', 
+                          {'form': form, 'chapters': chapters}, context_instance = RequestContext(self.request))
 
 class CreateCourseView(CreateView, GroupRequiredMixin):
 	# def get_queryset(self, request):
@@ -220,7 +222,7 @@ class UpdateCourseView(UpdateView):
 		return context
 	def form_valid(self, form):
 		self.object = form.save()
-		return HttpResponseRedirect(self.get_succes_url())
+		return HttpResponseRedirect(self.get_success_url())
 
 class UpdateChapterView(UpdateView):
 
@@ -245,7 +247,7 @@ class UpdateChapterView(UpdateView):
 		return context
 	def form_valid(self, form):
 		self.object = form.save()
-		return HttpResponseRedirect(self.get_succes_url())
+		return HttpResponseRedirect(self.get_success_url())
 
 class DeleteCourseView(DeleteView):
 

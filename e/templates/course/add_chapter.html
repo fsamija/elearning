@@ -6,7 +6,7 @@ $(document).ready(function() {
   $('#add-chapter').click(function(ev){
 
     ev.preventDefault();
-    var count = $('.chapters').children().length;
+    var count = 1;
     
     var tmplMarkup = $('#chapter-template').html();
     var compiledTmpl = tmplMarkup.replace(/__prefix__/g, count);
@@ -23,7 +23,7 @@ $(document).ready(function() {
 
 <script type="text/html" id="chapter-template">
 <div id="chapter-__prefix__">
-    {{ form }}
+    {{ form.as_p }}
 
 </div>
 </script>
@@ -39,12 +39,26 @@ $(document).ready(function() {
   <legend>Add Chapters</legend>
 {% endif %}
 
-  {{ form }}
-{{chapter}}
+<!-- {{ chapters }} --> 
+{% for chap in chapters %}
+<p>
+<label for="id_title">Title:</label>
+<input id="id_title" maxlength="255" name="title" type="text" value="{{chap.title}}">
+</p>
+<p>
+<label for="id_content">Content:</label>
+<input id="id_content" maxlength="255" name="content" type="text" value="{{chap.content}}">
+</p>
+
+  {% endfor %}
+
+
+  {{ form.as_p }}
+<!-- {{chapter}} -->
   <div class="chapters">
 	  {% for chapter_form in form %}
 	    <div id="chapter-{{ forloop.counter0 }}">
-	      <!-- {{ chapter_form.id }} -->
+	      <!-- {{ chapter_form }} -->
 	      <!-- {{ form.as_p }} -->
 
 	    </div>
