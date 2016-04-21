@@ -39,12 +39,15 @@ class UserProfileForm(forms.ModelForm):
 class CourseForm(forms.ModelForm):
     class Meta:
         model = Course
-        fields = '__all__' 
-
+        # exclude = ('user',)
+        fields = ['title']
+        # widgets = {'user': forms.HiddenInput()}
 
 class CourseChapterForm(forms.ModelForm):
     class Meta:
         model = CourseChapter
-        fields = '__all__' 
+        exclude = ('course',) 
+        widgets = {'course': forms.HiddenInput()}
+
 
 CourseChapterFormSet = inlineformset_factory(Course, CourseChapter,  fields = '__all__' )

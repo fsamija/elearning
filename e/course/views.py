@@ -57,9 +57,27 @@ class IndexView(generic.ListView):
 
 # 	return render_to_response('course/course_list.html', {"object_list": queryset})
 
-# class DetailCourseView(DetailView):
-# 	model = Course
-	#template_name = 'course/course_view.html'
+class DetailCourseView(DetailView):
+	model = Course
+	template_name = 'course/course_view.html'
+	def get_context_data(self, **kwargs):
+		context = super(DetailCourseView, self).get_context_data(**kwargs)
+		context['course'] =  Course.objects.filter(id=self.get_object().id)
+		context['course_form'] = CourseForm
+		context['chapter_form'] = CourseChapterForm
+		context['chapters'] = CourseChapter.objects.filter(course_id=self.get_object().id)
+		
+		return  context
+
+
+# class DetailChapterView(DetailView):
+# 	model = CourseChapter
+# 	template_name = 'course/chapter_view.html'
+# 	def get_context_data(self, **kwargs):
+# 		context = super(DetailChapterView, self).get_context_data(**kwargs)
+# 		context['objects'] =  CourseChapter.objects.all()
+        
+# 		return context
 
 # def show_files(request, pk):
 # 	objects = Course.objects.get(id=pk)
@@ -140,9 +158,9 @@ class CreateChapterView(CreateView, GroupRequiredMixin):
 
 	def form_valid(self, form):
 		self.object = form.save()
-		chapters = CourseChapter.objects.all()
+		# chapters = CourseChapter.objects.filter(course_id=Course.id)
 		return  render_to_response('course/add_chapter.html', 
-                          {'form': form, 'chapters': chapters}, context_instance = RequestContext(self.request))
+                          {'form': form}, context_instance = RequestContext(self.request))
 
 class CreateCourseView(CreateView, GroupRequiredMixin):
 	# def get_queryset(self, request):
@@ -217,7 +235,7 @@ class UpdateCourseView(UpdateView):
 		# context['chapter'] = CourseChapterForm(self.request.POST)
 		context['action'] = reverse('courses-edit',
                                     kwargs={'pk': self.get_object().id})
-		context['chapter'] = CourseChapter.objects.get(course_id=self.get_object().id)
+		context['chapter'] = CourseChapter.objects.filter(course_id=self.get_object().id)
 
 		return context
 	def form_valid(self, form):

@@ -6,12 +6,11 @@ from django.contrib.contenttypes.models import ContentType
 from django.conf import settings
 
 def upload_location(obj, filename):
-	return "%s/%s" %(obj.user, filename)
+	return "%s/%s" %(obj.course, filename)
 
 class Course(models.Model):
-	user = models.ForeignKey(settings.AUTH_USER_MODEL, default=1)
-	name = models.CharField(max_length=255,)	
-	upload = models.FileField(upload_to=upload_location, blank=True)
+	user = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True)
+	title = models.CharField(max_length=255,)	
 	# list_display = ('display_courses')
 	# fieldsets = [(None, 
 	# 	{'fields': ['chapter_title']}),
@@ -21,7 +20,7 @@ class Course(models.Model):
 	# list_display = ('chapter_title', 'pub_date', 'content')
 	def __str__(self):
 		return ' '.join([
-			self.name
+			self.title
 			])
 	class Meta:
 		permissions = (
@@ -36,14 +35,15 @@ class Course(models.Model):
 	# 	self.upload.open() # reset the pointer of file, needs if you need to read file more than once, in a request.
 	# 	return self.upload.read().replace('\n', '<br>')
 class CourseChapter(models.Model):
-	title = models.CharField(max_length=255,)
+	subtitle = models.CharField(max_length=255,)
 	content = models.CharField(max_length=255,)
-	course = models.ForeignKey(Course)#, on_delete=models.CASCADE, related_name="course_chapters"#)
+	course = models.ForeignKey(Course, blank=True)#, on_delete=models.CASCADE, related_name="course_chapters"#)
+	upload = models.FileField(upload_to=upload_location, blank=True)
 	
 	# def display_courses(self):
 	# 	return ', '.join([ course.name for course in self.courses.all() ])
 	def __str__(self):       
-		return self.title
+		return self.subtitle
 
 
 class UserProfile(models.Model):

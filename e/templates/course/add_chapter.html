@@ -40,17 +40,16 @@ $(document).ready(function() {
 {% endif %}
 
 <!-- {{ chapters }} --> 
-{% for chap in chapters %}
+
 <p>
-<label for="id_title">Title:</label>
-<input id="id_title" maxlength="255" name="title" type="text" value="{{chap.title}}">
+<label for="id_subtitle">Subtitle:</label>
+<input id="id_subtitle" maxlength="255" name="subtitle" type="text" value="">
 </p>
 <p>
 <label for="id_content">Content:</label>
-<input id="id_content" maxlength="255" name="content" type="text" value="{{chap.content}}">
+<input id="id_content" maxlength="255" name="content" type="text" value="">
 </p>
 
-  {% endfor %}
 
 
   {{ form.as_p }}
@@ -66,8 +65,9 @@ $(document).ready(function() {
   </div>
 
  <div class="form-actions">
-   <a href="#" id="add-chapter" class="btn btn-info add-chapter" >Add Chapter</a>
-   <button type="submit" class="btn btn-primary">Submit</button>
+<!--    <a href="#" id="add-chapter" class="btn btn-info add-chapter" >Add Chapter</a> -->
+   <button type="submit" class="btn btn-success">Add Chapter</button>
+<a class="btn btn-primary" href="{% url "courses-list" %}">Back to list</a>
  </div>
 </form>
 

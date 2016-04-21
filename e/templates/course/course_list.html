@@ -14,12 +14,10 @@
     	(<a href="{% url "courses-edit" pk=course.id %}">edit</a>)
     	(<a href="{% url "courses-delete" pk=course.id %}">delete</a>)
     	{% if perms.course.can_view %}
-		(<a href="/media/{{course.upload}}">view</a>)
+		(<a href="{% url "courses-view" pk=course.id %}">view</a>)
 		{% endif %}
 
-<!-- 		{% if course.user|has_group:"Professors" %}
-		(<a href="/media/{{course.upload}}">view</a>)
-		{% endif %} -->
+
     </li>
   {% endfor %}
 </ul>

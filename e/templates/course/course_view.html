@@ -1,25 +1,22 @@
-<div id="uploaded">
-    {% if uploadError %}
-    <span class="error">{{ uploadError }}</span>
-    {% else %}
-    {{ uploadedFile }}
-    {% endif %}
+<!-- {{course_form}}
+{{chapter_form}}
+{{course}}
+{{chapters}} -->
+<div id="course">
+	<label for="id_title">Title:</label>
+	<input id="id_title" maxlength="255" name="title" type="text" value="{{course}}">
+	
 </div>
-
-
-
-  <p>
-{{objects.name}}
- </p>
-   <p>
-{{objects.display_file|linebreaks}}
- </p>
-
-<p><a href="/media/{{objects.upload}}">{{objects.name}}</a></p>
-
- <p>
-   file name: {{obj.name}} <br>
-   file content: {{obj.display_file}}
- </p>
-
+<legend>Chapters</legend>
+{% for chapter in chapters %}
+<div id="chapter-{{ forloop.counter0 }}">
+	<legend>Chapter{{ forloop.counter0 }}</legend>
+	<label for="id_subtitle">Subtitle:</label>
+	<input id="id_subtitle" maxlength="255" name="subtitle" type="text" value="{{chapter.subtitle}} ">
+	<label for="id_content">Content:</label>
+	<input id="id_content" maxlength="255" name="content" type="text" value="{{chapter.content}} ">
+	<label for="id_upload">File:</label>
+	<a href="/media/{{chapter.upload}}">view</a>
+</div>
+{% endfor %}
 
