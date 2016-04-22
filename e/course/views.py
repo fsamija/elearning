@@ -199,12 +199,7 @@ class CreateCourseView(CreateView, GroupRequiredMixin):
 		return HttpResponseRedirect(reverse('courses-chapters', kwargs={'pk': self.object.pk}))  # redirect(self.object.get_absolute_url()) assuming your model has ``get_absolute_url`` defined.
 		# else:
 		# 	return self.render_to_response(self.get_context_data(form=form))
-	# def get_context_data(self, **kwargs):
 
-	# 	context = super(CreateCourseView, self).get_context_data(**kwargs)
-	# 	context['action'] = reverse('courses-new')
-
-	# 	return context
 
 class UpdateCourseView(UpdateView):
 
@@ -235,8 +230,11 @@ class UpdateCourseView(UpdateView):
 		# context['chapter'] = CourseChapterForm(self.request.POST)
 		context['action'] = reverse('courses-edit',
                                     kwargs={'pk': self.get_object().id})
-		context['chapter'] = CourseChapter.objects.filter(course_id=self.get_object().id)
-
+		context['chapters'] = CourseChapter.objects.filter(course_id=self.get_object().id)
+		if 'course' in self.request.POST:
+			print self
+		if 'chapter' in self.request.POST:
+			print self
 		return context
 	def form_valid(self, form):
 		self.object = form.save()
@@ -261,7 +259,9 @@ class UpdateChapterView(UpdateView):
 		# context['chapter'] = CourseChapterForm(self.request.POST)
 		context['action'] = reverse('chapters-edit',
                                     kwargs={'pk': self.get_object().id})
-
+		context['course'] = Course.objects.all()
+		context['chapters'] = CourseChapter.objects.all()
+		
 		return context
 	def form_valid(self, form):
 		self.object = form.save()

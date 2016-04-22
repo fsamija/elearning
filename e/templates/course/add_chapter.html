@@ -33,22 +33,23 @@ $(document).ready(function() {
 
   {% csrf_token %}
 
-{% if course.id %}
+{% if course %}
   <legend>Edit Chapters</legend>
 {% else %}
   <legend>Add Chapters</legend>
 {% endif %}
+<!-- {{chapter}} -->
+<!-- {{ chapters }} -->
+<!-- {{course}}  -->
 
-<!-- {{ chapters }} --> 
-
-<p>
+<!-- <p>
 <label for="id_subtitle">Subtitle:</label>
 <input id="id_subtitle" maxlength="255" name="subtitle" type="text" value="">
 </p>
 <p>
 <label for="id_content">Content:</label>
 <input id="id_content" maxlength="255" name="content" type="text" value="">
-</p>
+</p> -->
 
 
 
