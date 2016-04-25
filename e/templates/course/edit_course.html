@@ -18,14 +18,22 @@
 
   {% csrf_token %}
 
-  {{ form }}
+
+<label for="id_title">Title:</label>
+<input id="id_title" maxlength="255" name="title" type="text" value="{{course.title}}">
      <button type="submit" name="course" class="btn btn-success">Submit</button>
-     </form>
+    
+<select id="id_user" name="user"  style="display:none;">
+<option value="1" selected="selected">{{user}}</option>
+</select>
+ </form>
 
 <form action="{{ action }}" class="form-horizontal form-inline" method="post" enctype="multipart/form-data">
 
   {% csrf_token %}
+    {% if course.id %}
 <legend>Chapters</legend>
+{% endif %}
 {% for chapter in chapters %}
 <div id="chapter-{{ forloop.counter }}">
 	<legend>Chapter{{ forloop.counter }}</legend>

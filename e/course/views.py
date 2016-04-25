@@ -153,7 +153,7 @@ class CreateChapterView(CreateView, GroupRequiredMixin):
 
 		context = super(CreateChapterView, self).get_context_data(**kwargs)
 		context['chapter'] = CourseChapterForm
-
+		context['last'] = Course.objects.all().last()
 		return context
 
 	def form_valid(self, form):
@@ -231,10 +231,11 @@ class UpdateCourseView(UpdateView):
 		context['action'] = reverse('courses-edit',
                                     kwargs={'pk': self.get_object().id})
 		context['chapters'] = CourseChapter.objects.filter(course_id=self.get_object().id)
-		if 'course' in self.request.POST:
-			print self
-		if 'chapter' in self.request.POST:
-			print self
+		
+		# if 'course' in self.request.POST:
+		# 	print 
+		# if 'chapter' in self.request.POST:
+		# 	print 
 		return context
 	def form_valid(self, form):
 		self.object = form.save()
@@ -261,6 +262,7 @@ class UpdateChapterView(UpdateView):
                                     kwargs={'pk': self.get_object().id})
 		context['course'] = Course.objects.all()
 		context['chapters'] = CourseChapter.objects.all()
+		context['course_id'] = self.get_object().course.id
 		
 		return context
 	def form_valid(self, form):

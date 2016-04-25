@@ -38,23 +38,37 @@ $(document).ready(function() {
 {% else %}
   <legend>Add Chapters</legend>
 {% endif %}
-<!-- {{chapter}} -->
-<!-- {{ chapters }} -->
-<!-- {{course}}  -->
+{{id}}
+{% if not course_id %}
+<p><label for="id_subtitle">Subtitle:</label> <input id="id_subtitle" maxlength="255" name="subtitle" type="text" value=""></p>
+    <p><label for="id_content">Content:</label> <input id="id_content" maxlength="255" name="content" type="text" value=""></p>
+    <p><select id="id_course" name="course" style="display:none;">
+    <option value="1" selected="selected">{{last.id}}</option>
 
-<!-- <p>
-<label for="id_subtitle">Subtitle:</label>
-<input id="id_subtitle" maxlength="255" name="subtitle" type="text" value="">
-</p>
-<p>
-<label for="id_content">Content:</label>
-<input id="id_content" maxlength="255" name="content" type="text" value="">
-</p> -->
+    </select></p>
+    <p><label for="id_upload">Upload:</label>
+
+      <input id="id_upload" name="upload" type="file"></p>
+ 
+{% endif %}
+{% for chapter in chapters %}
+  {% if course_id == chapter.course_id  %}
+    <p><label for="id_subtitle">Subtitle:</label> <input id="id_subtitle" maxlength="255" name="subtitle" type="text" value="{{chapter.subtitle}}"></p>
+    <p><label for="id_content">Content:</label> <input id="id_content" maxlength="255" name="content" type="text" value="{{chapter.content}}"></p>
+    <p><select id="id_course" name="course" style="display:none;">
+    <option value="1" selected="selected">{{course_id}}</option>
+
+    </select></p>
+    <p><label for="id_upload">Upload:</label>
+    {% if chapter.upload %}
+      Currently:  <a href="/media/{{chapter.upload}}">{{chapter.upload}}</a></p><p> Change: <input id="id_upload" name="upload" type="file"></p>
+    {% else %}
+      <input id="id_upload" name="upload" type="file"></p>
+    {% endif %}
+  {% endif %}
+{% endfor %}
 
 
-
-  {{ form.as_p }}
-<!-- {{chapter}} -->
   <div class="chapters">
 	  {% for chapter_form in form %}
 	    <div id="chapter-{{ forloop.counter0 }}">
