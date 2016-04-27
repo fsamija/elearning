@@ -2,10 +2,12 @@
 {{chapter_form}}
 {{course}}
 {{chapters}} -->
+{% extends "base.html" %}
+{% block content %}
 <div id="course">
 	<label for="id_title">Title:</label>
 	<input id="id_title" maxlength="255" name="title" type="text" value="{{course}}">
-	
+
 </div>
 <legend>Chapters</legend>
 {% for chapter in chapters %}
@@ -20,3 +22,4 @@
 </div>
 {% endfor %}
 
+{% endblock content %}
