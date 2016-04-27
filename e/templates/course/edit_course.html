@@ -13,7 +13,7 @@
 
 
 
-
+<!-- Add course forma -->
 <form action="{{ action }}" class="form-horizontal form-inline" method="post" enctype="multipart/form-data">
 
   {% csrf_token %}
@@ -21,17 +21,18 @@
 
 <label for="id_title">Title:</label>
 <input id="id_title" maxlength="255" name="title" type="text" value="{{course.title}}">
-     <button type="submit" name="course" class="btn btn-success">Submit</button>
+
     
 <select id="id_user" name="user"  style="display:none;">
-<option value="1" selected="selected">{{user}}</option>
+<option value="{{user.id}}" selected="selected">{{user}}</option>
 </select>
- </form>
+ <button type="submit" name="course" class="btn btn-success">Submit</button>
+</form>
 
-<form action="{{ action }}" class="form-horizontal form-inline" method="post" enctype="multipart/form-data">
 
-  {% csrf_token %}
-    {% if course.id %}
+
+
+{% if course.id %}
 <legend>Chapters</legend>
 {% endif %}
 {% for chapter in chapters %}
@@ -46,27 +47,15 @@
 	  <a class="btn btn-primary" href="{% url "chapters-edit" pk=chapter.pk %}">Edit chapter</a>
 </div>
 {% endfor %}
-<!-- 
-  <legend>Chapters</legend> -->
 
-<!--   <div class="chapters">
-	  {% for chapter_form in formset %}
-	    <div id="chapter-{{ forloop.counter0 }}">
-	      <!-- {{ chapter_form.id }}
-	      {{ chapter_form.as_p }}
-
-	    </div>
-	  {% endfor %}
-  </div> --> 
-<!--   {% if course.id %}
-<a class="btn btn-primary" href="{% url "chapters-edit" pk=course.pk %}">edit chapters</a>
-{% endif %} -->
  <div class="form-actions">
-<!--    <a href="#" id="add-chapter" class="btn btn-info add-chapter" >Add Chapter</a> -->
+ 	{% if course.id %}
+   <a href="{% url "courses-chapters" pk=course.id %}" id="add-chapter" class="btn btn-info add-chapter" >Add Chapter</a>
+   {% endif %}
 <a class="btn btn-primary" href="{% url "courses-list" %}">Back to list</a>
 <!--    <button type="submit" name="chapter" class="btn btn-success">Submit</button> -->
  </div>
-</form>
+
 
 
 

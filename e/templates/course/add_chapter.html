@@ -27,61 +27,83 @@ $(document).ready(function() {
 
 </div>
 </script>
-
-
 <form action="{{ action }}" class="form-horizontal form-inline" method="post" enctype="multipart/form-data">
 
   {% csrf_token %}
-
-{% if course %}
+<!-- Ako postoji course_id(samo u create view) editaj ako ne dodaj -->
+{% if course_id %}
   <legend>Edit Chapters</legend>
 {% else %}
   <legend>Add Chapters</legend>
 {% endif %}
-{{id}}
+<!-- ako postoji courses(createchapter) -->
+{% if courses %}
+  {% for chapter in chapters %}
+    {% if course_id == chapter.course_id or last.id == chapter.course_id %}
+
+      <p><label for="id_subtitle">Subtitle:</label> <input id="id_subtitle" maxlength="255" name="subtitle" type="text" value="{{chapter.subtitle}}"></p>
+      <p><label for="id_content">Content:</label> <input id="id_content" maxlength="255" name="content" type="text" value="{{chapter.content}}"></p>
+      <p><select id="id_course" name="course" style="display:none;">
+      <option value="{{course_id}}" selected="selected">{{course_id}}</option>
+
+      </select></p>
+      <p><label for="id_upload">Upload:</label>
+      {% if chapter.upload %}
+        Currently:  <a href="/media/{{chapter.upload}}">{{chapter.upload}}</a></p><p> Change: <input id="id_upload" name="upload" type="file"></p>
+      {% else %}
+        <input id="id_upload" name="upload" type="file"></p>
+      {% endif %}
+    {% endif %}
+  {% endfor %}
+{% else %}
+  {% for chapter in chapters %}
+    {% if chapter_id == chapter.id %}
+      <p><label for="id_subtitle">Subtitle:</label> <input id="id_subtitle" maxlength="255" name="subtitle" type="text" value="{{chapter.subtitle}}"></p>
+      <p><label for="id_content">Content:</label> <input id="id_content" maxlength="255" name="content" type="text" value="{{chapter.content}}"></p>
+      <p><select id="id_course" name="course" style="display:none;">
+      <option value="{{course_id}}" selected="selected">{{course_id}}</option>
+
+      </select></p>
+      <p><label for="id_upload">Upload:</label>
+      {% if chapter.upload %}
+        Currently:  <a href="/media/{{chapter.upload}}">{{chapter.upload}}</a></p><p> Change: <input id="id_upload" name="upload" type="file"></p>
+      {% else %}
+        <input id="id_upload" name="upload" type="file"></p>
+      {% endif %}
+
+    {% endif %}
+  {% endfor %}
+{% endif %}
+
+
+
+
 {% if not course_id %}
 <p><label for="id_subtitle">Subtitle:</label> <input id="id_subtitle" maxlength="255" name="subtitle" type="text" value=""></p>
     <p><label for="id_content">Content:</label> <input id="id_content" maxlength="255" name="content" type="text" value=""></p>
     <p><select id="id_course" name="course" style="display:none;">
-    <option value="1" selected="selected">{{last.id}}</option>
+    <option value="{{last.id}}" selected="selected">{{last}}</option>
 
     </select></p>
     <p><label for="id_upload">Upload:</label>
 
       <input id="id_upload" name="upload" type="file"></p>
- 
+
 {% endif %}
-{% for chapter in chapters %}
-  {% if course_id == chapter.course_id  %}
-    <p><label for="id_subtitle">Subtitle:</label> <input id="id_subtitle" maxlength="255" name="subtitle" type="text" value="{{chapter.subtitle}}"></p>
-    <p><label for="id_content">Content:</label> <input id="id_content" maxlength="255" name="content" type="text" value="{{chapter.content}}"></p>
-    <p><select id="id_course" name="course" style="display:none;">
-    <option value="1" selected="selected">{{course_id}}</option>
-
-    </select></p>
-    <p><label for="id_upload">Upload:</label>
-    {% if chapter.upload %}
-      Currently:  <a href="/media/{{chapter.upload}}">{{chapter.upload}}</a></p><p> Change: <input id="id_upload" name="upload" type="file"></p>
-    {% else %}
-      <input id="id_upload" name="upload" type="file"></p>
-    {% endif %}
-  {% endif %}
-{% endfor %}
 
 
-  <div class="chapters">
-	  {% for chapter_form in form %}
-	    <div id="chapter-{{ forloop.counter0 }}">
-	      <!-- {{ chapter_form }} -->
-	      <!-- {{ form.as_p }} -->
 
-	    </div>
-	  {% endfor %}
-  </div>
+
+
 
  <div class="form-actions">
 <!--    <a href="#" id="add-chapter" class="btn btn-info add-chapter" >Add Chapter</a> -->
-   <button type="submit" class="btn btn-success">Add Chapter</button>
+{% if course_id %}
+<button type="submit" class="btn btn-success">Edit Chapter</button>
+{% else %}
+<button type="submit" class="btn btn-success">Add Chapter</button>
+{% endif %}
+   
 <a class="btn btn-primary" href="{% url "courses-list" %}">Back to list</a>
  </div>
 </form>

@@ -147,20 +147,24 @@ class CreateChapterView(CreateView, GroupRequiredMixin):
 		self.pk = kwargs.get('pk')
 		return super(CreateChapterView, self).dispatch(request, *args, **kwargs)
 	def get_success_url(self):
-		return reverse('courses-list')
+		return reverse('courses-chapters',
+                                    kwargs={'pk': Course.objects.latest('id').id})
 
 	def get_context_data(self, **kwargs):
 
 		context = super(CreateChapterView, self).get_context_data(**kwargs)
 		context['chapter'] = CourseChapterForm
-		context['last'] = Course.objects.all().last()
+		context['chapters'] = CourseChapter.objects.all()
+		context['last'] = Course.objects.latest('id')
+		context['courses'] = Course.objects.all()
+		context['action'] = reverse('courses-chapters',
+                                    kwargs={'pk': Course.objects.latest('id').id})
 		return context
 
 	def form_valid(self, form):
 		self.object = form.save()
 		# chapters = CourseChapter.objects.filter(course_id=Course.id)
-		return  render_to_response('course/add_chapter.html', 
-                          {'form': form}, context_instance = RequestContext(self.request))
+		return  HttpResponseRedirect(self.get_success_url())
 
 class CreateCourseView(CreateView, GroupRequiredMixin):
 	# def get_queryset(self, request):
@@ -194,6 +198,7 @@ class CreateCourseView(CreateView, GroupRequiredMixin):
 		# formset = context['action']
 		# if formset.is_valid():
 		self.object = form.save()
+		print form
 		# 	formset.instance = self.object
 		# 	formset.save()
 		return HttpResponseRedirect(reverse('courses-chapters', kwargs={'pk': self.object.pk}))  # redirect(self.object.get_absolute_url()) assuming your model has ``get_absolute_url`` defined.
@@ -252,7 +257,8 @@ class UpdateChapterView(UpdateView):
 		return super(UpdateChapterView, self).dispatch(request)
 
 	def get_success_url(self):
-		return reverse('courses-list')
+		return reverse('courses-edit',
+                                    kwargs={'pk': self.get_object().course.id})
 
 	def get_context_data(self, **kwargs):
 
@@ -260,9 +266,10 @@ class UpdateChapterView(UpdateView):
 		# context['chapter'] = CourseChapterForm(self.request.POST)
 		context['action'] = reverse('chapters-edit',
                                     kwargs={'pk': self.get_object().id})
-		context['course'] = Course.objects.all()
+		# context['course'] = Course.objects.all()
 		context['chapters'] = CourseChapter.objects.all()
 		context['course_id'] = self.get_object().course.id
+		context['chapter_id'] = self.get_object().id
 		
 		return context
 	def form_valid(self, form):
