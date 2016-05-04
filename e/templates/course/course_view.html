@@ -1,25 +1,74 @@
-<!-- {{course_form}}
-{{chapter_form}}
-{{course}}
-{{chapters}} -->
 {% extends "base.html" %}
+{% load embed_video_tags %}
 {% block content %}
+<legend>Course</legend> 
+
 <div id="course">
 	<label for="id_title">Title:</label>
-	<input id="id_title" maxlength="255" name="title" type="text" value="{{course}}">
+	<input id="id_title" maxlength="255" name="title" type="text" value="{{course.title}}">
+<a class="btn btn-primary" href="{% url "courses-list" %}">Back to list</a>
+</div>
 
-</div>
 <legend>Chapters</legend>
+<div id="chapter_wrapper" class="col-xs-12 col-md-12">
 {% for chapter in chapters %}
-<div id="chapter-{{ forloop.counter0 }}">
-	<legend>Chapter{{ forloop.counter0 }}</legend>
-	<label for="id_subtitle">Subtitle:</label>
-	<input id="id_subtitle" maxlength="255" name="subtitle" type="text" value="{{chapter.subtitle}} ">
-	<label for="id_content">Content:</label>
-	<input id="id_content" maxlength="255" name="content" type="text" value="{{chapter.content}} ">
-	<label for="id_upload">File:</label>
-	<a href="/media/{{chapter.upload}}">view</a>
-</div>
+	<div id="chapter_nav-{{ forloop.counter }}" class="chapter_nav col-xs-3 col-md-3">{{ forloop.counter }}. {{chapter.subtitle}} </div>
+
+	<div id="chapter-{{ forloop.counter }}" class="chapters_view col-xs-9 col-md-9" style="display:none;">
+		<!-- <legend>Chapter{{ forloop.counter }}</legend> -->
+		<p><label for="id_subtitle">Chapter title:</label>
+		<input id="id_subtitle" maxlength="255" name="subtitle" type="text" value="{{chapter.subtitle}} "></p>
+		<p><label for="id_content">Content:</label>
+		<input id="id_content" maxlength="255" name="content" type="text" value="{{chapter.content}} "></p>
+		<p><label for="id_upload">File:</label>
+		{% if chapter.upload %}
+			<a href="/media/{{chapter.upload}}">view</a>
+      	{% else %}
+        	No file
+
+      	{% endif %}
+      	</p>
+      	<p>
+      	<label for="id_video">Video:</label>
+      	{% if chapter.video %}
+			{% video chapter.video 'small' %}
+		{% else %}			
+		No video
+		{% endif %}
+		</p>
+		<p>
+      <label for="id_image">Image:</label>
+      {% if chapter.image %}
+      	<img src="{{chapter.image.url}}">
+      {% else %}
+      No image
+      {% endif %}
+    </p>
+
+	</div>
+	<br>
 {% endfor %}
+</div>
+<script>
+$(document).ready(function(){
+	$('#chapter-1').toggle()
+    $('.chapter_nav').on("click", function(e) {  
+        var chapter = e.target.id
+        var id = chapter.split('-')
+        console.log(e.target.id)
+        console.log(id[1])
+        $('.chapters_view').children().hide()
+        $('#chapter-'+id[1]).toggle()
+        $('#chapter-'+id[1]).children().toggle()
+
+
+    });
+
+
+});
+
+</script>
+
+
 
 {% endblock content %}

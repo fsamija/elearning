@@ -62,7 +62,7 @@ class DetailCourseView(DetailView):
 	template_name = 'course/course_view.html'
 	def get_context_data(self, **kwargs):
 		context = super(DetailCourseView, self).get_context_data(**kwargs)
-		context['course'] =  Course.objects.filter(id=self.get_object().id)
+		# context['course'] =  Course.objects.filter(id=self.get_object().id)
 		context['course_form'] = CourseForm
 		context['chapter_form'] = CourseChapterForm
 		context['chapters'] = CourseChapter.objects.filter(course_id=self.get_object().id)

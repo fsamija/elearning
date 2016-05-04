@@ -1,3 +1,21 @@
 h1{
 	color: #666666;
 }
+.chapter_nav{
+	/*width: 20%;*/
+	/*float: left;*/
+	/*position: absolute;*/
+
+}
+.chapters_view{
+	/*width: 80%;*/
+	position: absolute;
+	left: 8em;
+	top: 0em;
+
+}
+#chapter_wrapper{
+	display: inline-block;
+	width: 100%
+
+}

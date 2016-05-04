@@ -4,6 +4,8 @@ from django.contrib.auth.models import Permission, Group
 from django.db import models
 from django.contrib.contenttypes.models import ContentType
 from django.conf import settings
+from embed_video.fields import EmbedVideoField
+
 
 def upload_location(obj, filename):
 	return "%s/%s" %(obj.course, filename)
@@ -39,7 +41,20 @@ class CourseChapter(models.Model):
 	content = models.CharField(max_length=255,)
 	course = models.ForeignKey(Course, blank=True)#, on_delete=models.CASCADE, related_name="course_chapters"#)
 	upload = models.FileField(upload_to=upload_location, blank=True)
+	video = EmbedVideoField(blank=True)
+	image = models.ImageField(upload_to=upload_location, blank=True)
 	
+	# HTML = 1
+	# IMAGE = 2
+	# VIDEO = 3
+	# QUIZ = 4
+	# CONTENT_CHOICES = (
+	# 	(HTML, 'HTML'),
+	# 	(IMAGE, 'Image'),
+	# 	(VIDEO, 'Video'),
+	# 	(QUIZ, 'Quiz'),
+	# 	)
+	# choice = models.IntegerField(choices=CONTENT_CHOICES, default=HTML)
 	# def display_courses(self):
 	# 	return ', '.join([ course.name for course in self.courses.all() ])
 	def __str__(self):       

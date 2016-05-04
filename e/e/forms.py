@@ -4,6 +4,8 @@ from django.contrib.auth.forms import UserCreationForm
 from django.forms.models import inlineformset_factory
 from course.models import UserProfile, Course, CourseChapter
 
+from tinymce.widgets import TinyMCE
+
 class MyRegistrationForm(UserCreationForm):
     email = forms.EmailField(required = True)
     first_name = forms.CharField(required = True)
@@ -44,6 +46,7 @@ class CourseForm(forms.ModelForm):
         widgets = {'user': forms.HiddenInput()}
 
 class CourseChapterForm(forms.ModelForm):
+    html = forms.CharField(widget=TinyMCE(attrs={'cols': 50, 'rows': 30}))
     class Meta:
         model = CourseChapter
         exclude = ('course',) 
@@ -51,3 +54,4 @@ class CourseChapterForm(forms.ModelForm):
 
 
 CourseChapterFormSet = inlineformset_factory(Course, CourseChapter,  fields = '__all__' )
+

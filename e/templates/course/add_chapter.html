@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load embed_video_tags %}
 {% block content %}
 
 <script>
@@ -40,11 +41,11 @@ $(document).ready(function() {
 {% if courses %}
   {% for chapter in chapters %}
     {% if course_id == chapter.course_id or last.id == chapter.course_id %}
-
+      {% video chapter.video 'small' %}
       <p><label for="id_subtitle">Subtitle:</label> <input id="id_subtitle" maxlength="255" name="subtitle" type="text" value="{{chapter.subtitle}}"></p>
       <p><label for="id_content">Content:</label> <input id="id_content" maxlength="255" name="content" type="text" value="{{chapter.content}}"></p>
       <p><select id="id_course" name="course" style="display:none;">
-      <option value="{{course_id}}" selected="selected">{{course_id}}</option>
+      <option value="{{chapter.course_id}}" selected="selected">{{chapter.course_id}}</option>
 
       </select></p>
       <p><label for="id_upload">Upload:</label>
@@ -52,12 +53,24 @@ $(document).ready(function() {
         Currently:  <a href="/media/{{chapter.upload}}">{{chapter.upload}}</a></p><p> Change: <input id="id_upload" name="upload" type="file"></p>
       {% else %}
         <input id="id_upload" name="upload" type="file"></p>
+
       {% endif %}
+
+      <p><label for="id_video">Video:</label>
+      <input id="id_video" maxlength="200" name="video" type="url" value="{{chapter.video}}"></p>
+      <p>
+      <label for="id_image">Image:</label>
+      <input id="id_image" name="image" type="file">
+      {% if chapter.image %} 
+      <img src="{{chapter.image.url}}">
+      {% endif %}
+    </p>
     {% endif %}
   {% endfor %}
 {% else %}
   {% for chapter in chapters %}
     {% if chapter_id == chapter.id %}
+    {% video chapter.video 'small' %}
       <p><label for="id_subtitle">Subtitle:</label> <input id="id_subtitle" maxlength="255" name="subtitle" type="text" value="{{chapter.subtitle}}"></p>
       <p><label for="id_content">Content:</label> <input id="id_content" maxlength="255" name="content" type="text" value="{{chapter.content}}"></p>
       <p><select id="id_course" name="course" style="display:none;">
@@ -71,13 +84,19 @@ $(document).ready(function() {
         <input id="id_upload" name="upload" type="file"></p>
       {% endif %}
 
+      <p><label for="id_video">Video:</label>
+      <input id="id_video" maxlength="200" name="video" type="url" value="{{chapter.video}}"></p>
+      <p>
+      <label for="id_image">Image:</label>
+      <input id="id_image" name="image" type="file">
+    </p>
     {% endif %}
   {% endfor %}
 {% endif %}
 
 
 
-
+<!-- nova forma -->
 {% if not course_id %}
 <p><label for="id_subtitle">Subtitle:</label> <input id="id_subtitle" maxlength="255" name="subtitle" type="text" value=""></p>
     <p><label for="id_content">Content:</label> <input id="id_content" maxlength="255" name="content" type="text" value=""></p>
@@ -89,6 +108,12 @@ $(document).ready(function() {
 
       <input id="id_upload" name="upload" type="file"></p>
 
+      <p><label for="id_video">Video:</label>
+      <input id="id_video" maxlength="200" name="video" type="url"></p>
+      <p>
+      <label for="id_image">Image:</label>
+      <input id="id_image" name="image" type="file"
+      </p>
 {% endif %}
 
 
