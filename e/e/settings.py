@@ -40,6 +40,9 @@ INSTALLED_APPS = [
     'course',
     'embed_video',
     #'groups_manager',
+    'django_wysiwyg',
+    'ckeditor',
+    'ckeditor_uploader',
     
 ]
 
@@ -132,3 +135,6 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 LOGIN_REDIRECT_URL = '/'
 AUTH_PROFILE_MODULE = 'e.UserProfile'
+# CKEDITOR_JQUERY_URL = '//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js'
+CKEDITOR_UPLOAD_PATH = "uploads/"
+DJANGO_WYSIWYG_FLAVOR = "ckeditor"

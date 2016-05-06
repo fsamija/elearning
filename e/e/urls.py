@@ -32,7 +32,8 @@ urlpatterns = [
 	#url(r'^groups-manager/', include('groups_manager.urls', namespace='groups_manager')),
     url(r'^media/(?P<path>.*)$',serve,
         {'document_root': settings.MEDIA_ROOT}),
-   
+    url(r'^ckeditor/', include('ckeditor_uploader.urls')),
+
     
 ]
 # if settings.DEBUG:

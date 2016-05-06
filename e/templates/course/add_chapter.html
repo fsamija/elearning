@@ -2,6 +2,12 @@
 {% load embed_video_tags %}
 {% block content %}
 
+{% load wysiwyg %}
+{% wysiwyg_setup %}
+
+
+
+
 <script>
 $(document).ready(function() {
   $('#add-chapter').click(function(ev){
@@ -37,7 +43,7 @@ $(document).ready(function() {
 {% else %}
   <legend>Add Chapters</legend>
 {% endif %}
-<!-- ako postoji courses(createchapter) -->
+<!-- ako postoji courses(createchapter), drugi(+) chapter -->
 {% if courses %}
   {% for chapter in chapters %}
     {% if course_id == chapter.course_id or last.id == chapter.course_id %}
@@ -64,7 +70,10 @@ $(document).ready(function() {
       {% if chapter.image %} 
       <img src="{{chapter.image.url}}">
       {% endif %}
-    </p>
+      </p>
+      <p><label for="id_html">HTML:</label>
+      {{chapter.html|safe}}
+      </p>
     {% endif %}
   {% endfor %}
 {% else %}
@@ -90,6 +99,7 @@ $(document).ready(function() {
       <label for="id_image">Image:</label>
       <input id="id_image" name="image" type="file">
     </p>
+    {{form.html}}
     {% endif %}
   {% endfor %}
 {% endif %}
@@ -114,6 +124,8 @@ $(document).ready(function() {
       <label for="id_image">Image:</label>
       <input id="id_image" name="image" type="file"
       </p>
+      {{form.html}}
+
 {% endif %}
 
 
@@ -132,5 +144,5 @@ $(document).ready(function() {
 <a class="btn btn-primary" href="{% url "courses-list" %}">Back to list</a>
  </div>
 </form>
-
+{% wysiwyg_editor "id_html" %}
  {% endblock content %}

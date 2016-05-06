@@ -1,2 +1,3 @@
 django-embed-video
-tinyMCE
+CKeditor
+wysiwyg

@@ -1,11 +1,11 @@
 from __future__ import unicode_literals
+from ckeditor.fields import RichTextField
 from django.contrib.auth.models import User
 from django.contrib.auth.models import Permission, Group
 from django.db import models
 from django.contrib.contenttypes.models import ContentType
 from django.conf import settings
 from embed_video.fields import EmbedVideoField
-
 
 def upload_location(obj, filename):
 	return "%s/%s" %(obj.course, filename)
@@ -43,7 +43,7 @@ class CourseChapter(models.Model):
 	upload = models.FileField(upload_to=upload_location, blank=True)
 	video = EmbedVideoField(blank=True)
 	image = models.ImageField(upload_to=upload_location, blank=True)
-	
+	html = RichTextField(blank=True,)
 	# HTML = 1
 	# IMAGE = 2
 	# VIDEO = 3

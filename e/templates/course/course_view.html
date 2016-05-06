@@ -43,8 +43,14 @@
       {% else %}
       No image
       {% endif %}
-    </p>
-
+    	</p>
+    {% if chapter.html %}
+    	<p><label for="id_html">HTML:</label>
+      {{chapter.html|safe}}
+      </p>
+      {% else %}
+      No HTML
+      {% endif %}
 	</div>
 	<br>
 {% endfor %}
